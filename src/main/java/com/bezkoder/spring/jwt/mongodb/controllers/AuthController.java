@@ -22,16 +22,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bezkoder.spring.jwt.mongodb.Exceptions.RoleNotFoundException;
+import com.bezkoder.spring.jwt.mongodb.Exceptions.TokenRefreshException;
 import com.bezkoder.spring.jwt.mongodb.models.ERole;
+import com.bezkoder.spring.jwt.mongodb.models.RefreshToken;
 import com.bezkoder.spring.jwt.mongodb.models.Role;
 import com.bezkoder.spring.jwt.mongodb.models.User;
+import com.bezkoder.spring.jwt.mongodb.payload.request.LogOutResquest;
 import com.bezkoder.spring.jwt.mongodb.payload.request.LoginRequest;
 import com.bezkoder.spring.jwt.mongodb.payload.request.SignupRequest;
+import com.bezkoder.spring.jwt.mongodb.payload.request.TokenRefreshRequest;
 import com.bezkoder.spring.jwt.mongodb.payload.response.JwtResponse;
 import com.bezkoder.spring.jwt.mongodb.payload.response.MessageResponse;
+import com.bezkoder.spring.jwt.mongodb.payload.response.TokenRefreshResponse;
 import com.bezkoder.spring.jwt.mongodb.repository.RoleRepository;
 import com.bezkoder.spring.jwt.mongodb.repository.UserRepository;
 import com.bezkoder.spring.jwt.mongodb.security.jwt.JwtUtils;
+import com.bezkoder.spring.jwt.mongodb.security.services.RefreshTokenService;
 import com.bezkoder.spring.jwt.mongodb.security.services.UserDetailsImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -53,6 +59,9 @@ public class AuthController {
 	@Autowired
 	JwtUtils jwtUtils;
 
+	@Autowired
+	RefreshTokenService resfreshTokenService;
+
 	@PostMapping(value = "/signin", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody final LoginRequest loginRequest) {
 
@@ -66,8 +75,9 @@ public class AuthController {
 		final List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
 				.collect(Collectors.toList());
 
-		return ResponseEntity.ok(
-				new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles));
+		final RefreshToken refreshToken = this.resfreshTokenService.creatRefreshToken(userDetails.getId());
+		return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
+				userDetails.getUsername(), userDetails.getEmail(), roles));
 	}
 
 	@PostMapping(value = "/signup", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -116,4 +126,23 @@ public class AuthController {
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
+
+	@PostMapping(value = "/refreshToken", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> refreshToken(@Valid @RequestBody TokenRefreshRequest refreshRequest) {
+		String requestRefreshToken = refreshRequest.getRefreshToken();
+
+		return this.resfreshTokenService.findByToken(requestRefreshToken).map(resfreshTokenService::verifyExpiration)
+				.map(RefreshToken::getUser).map(user -> {
+					String token = jwtUtils.generateTokenFromUsername(user.getUsername());
+					return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
+				}).orElseThrow(
+						() -> new TokenRefreshException("Refresh Token is not in Database !", requestRefreshToken));
+	}
+
+	@PostMapping(value = "/logout", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> logoutUser(@Valid @RequestBody LogOutResquest logOutRequest) {
+		this.resfreshTokenService.deleteByUserId(logOutRequest.getUserId());
+		return ResponseEntity.ok(new MessageResponse("Log out successful!"));
+	}
+
 }

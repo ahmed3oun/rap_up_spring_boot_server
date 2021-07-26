@@ -8,10 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+//import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+//@RestControllerAdvice
 @ControllerAdvice
 @RestController
 public class CustomExceptionResponseEntity extends ResponseEntityExceptionHandler {
@@ -50,6 +53,14 @@ public class CustomExceptionResponseEntity extends ResponseEntityExceptionHandle
         return new ResponseEntity<Object>(
                 new ExceptionResponse(new Date(), ex.getMessage(), ex.getBindingResult().toString()),
                 HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TokenRefreshException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<ExceptionResponse> handleTokenRefreshException(Exception ex, WebRequest request) {
+        return new ResponseEntity<ExceptionResponse>(
+                new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false)),
+                HttpStatus.FORBIDDEN);
     }
 
 }
