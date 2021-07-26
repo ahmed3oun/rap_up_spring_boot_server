@@ -23,12 +23,16 @@ public class ResourceFileStream {
     @NotBlank
     private String path;
 
+    @NotBlank
+    private User author;
+
     public ResourceFileStream(String id, @NotBlank @Size(min = 3) String filename, List<String> tags,
-            @NotBlank String pathFile) {
+            @NotBlank String pathFile, @NotBlank User author) {
         this.id = id;
         this.filename = filename;
         this.tags = tags;
         this.path = pathFile;
+        this.author = author;
     }
 
     public String getId() {
@@ -59,8 +63,16 @@ public class ResourceFileStream {
         return path;
     }
 
-    public void setPathFile(String path) {
+    public void setPath(String path) {
         this.path = path;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
 }

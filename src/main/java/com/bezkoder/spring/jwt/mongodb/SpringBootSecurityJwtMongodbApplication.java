@@ -8,7 +8,7 @@ public class SpringBootSecurityJwtMongodbApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootSecurityJwtMongodbApplication.class, args);
+		System.out.println("Server Started ... at port 8080");
 	}
-	//System.out.println("Server Started ... at port 8080");
 
 }

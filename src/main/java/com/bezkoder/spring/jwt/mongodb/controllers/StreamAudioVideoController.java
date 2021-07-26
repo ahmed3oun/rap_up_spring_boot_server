@@ -2,8 +2,12 @@ package com.bezkoder.spring.jwt.mongodb.controllers;
 
 import java.util.List;
 
+import com.bezkoder.spring.jwt.mongodb.Exceptions.FileStreamNotFoundException;
+import com.bezkoder.spring.jwt.mongodb.Exceptions.UserNotFoundException;
 import com.bezkoder.spring.jwt.mongodb.models.ResourceFileStream;
+import com.bezkoder.spring.jwt.mongodb.models.User;
 import com.bezkoder.spring.jwt.mongodb.repository.FileStreamRepository;
+import com.bezkoder.spring.jwt.mongodb.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -30,7 +34,10 @@ public class StreamAudioVideoController {
     private FileStreamRepository fileStreamRepository;
 
     @Autowired
-    MongoTemplate mongoTemplate;
+    private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private UserRepository userRepository;
 
     /*
      * @Autowired private NonStaticResourceHttpRequestHandler
@@ -47,30 +54,44 @@ public class StreamAudioVideoController {
         return new ResponseEntity<List<ResourceFileStream>>(files, HttpStatus.OK);
     }
 
+    // /api/audiovideo/all?tags=...
     @GetMapping("/all")
     public ResponseEntity<?> getVideosAudiosByTags(@RequestParam("tags") List<String> tags) {
 
         BasicQuery query = new BasicQuery("{ tags : { $in : " + tags + "}}");
         List<ResourceFileStream> files = mongoTemplate.find(query, ResourceFileStream.class);
 
-        /*
-         * List<ResourceFileStream> files = fileStreamRepository.findAll(query,
-         * ResourceFileStream.class) .orElseThrow(() -> new RuntimeException(
-         * "Sorry :: Something gone wrong :: this filename {" + filename +
-         * "} does'nt exists"));
-         */
         return new ResponseEntity<List<ResourceFileStream>>(files, HttpStatus.OK);
     }
 
+    // /api/audiovideo/{id}
     @GetMapping("/{id}")
-    public ResponseEntity<?> getVideosAudiosById(@PathVariable("id") String id) {
+    public ResponseEntity<?> getVideoAudioById(@PathVariable("id") String id) {
 
-        ResourceFileStream files = fileStreamRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Sorry :: Something gone wrong :: this Id {" + id + "} does'nt exists"));
+        ResourceFileStream file = fileStreamRepository.findById(id).orElseThrow(() -> new FileStreamNotFoundException(
+                "Sorry :: Something gone wrong :: this File Stream Id {" + id + "} does'nt exists"));
 
-        return new ResponseEntity<ResourceFileStream>(files, HttpStatus.OK);
+        return new ResponseEntity<ResourceFileStream>(file, HttpStatus.OK);
     }
 
+    // /api/audiovideo/author?id=...
+    @GetMapping("/author")
+    public ResponseEntity<?> getVideosAudiosByAuthor(@RequestParam("id") String id) {
+
+        /*
+         * METHOD 1 BasicQuery query = new BasicQuery("{ author : " + id + "}");
+         * List<ResourceFileStream> files = mongoTemplate.find(query,
+         * ResourceFileStream.class);
+         */
+        // METHOD 2
+        User author = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(
+                "Sorry :: Something gone wrong :: this User Id {" + id + "} does'nt exists"));
+
+        List<ResourceFileStream> files = fileStreamRepository.findByAuthor(author)
+                .orElseThrow(() -> new RuntimeException(
+                        "Sorry :: Something gone wrong : There's no Resource files with this Author Id {" + id + "} "));
+        return new ResponseEntity<List<ResourceFileStream>>(files, HttpStatus.OK);
+    }
     // deux end point download upload ....
 
 }

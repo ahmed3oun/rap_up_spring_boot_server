@@ -37,6 +37,13 @@ public class CustomExceptionResponseEntity extends ResponseEntityExceptionHandle
                 HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(FileStreamNotFoundException.class)
+    public final ResponseEntity<ExceptionResponse> handleFileStreamNotFoundException(Exception ex, WebRequest request) {
+        return new ResponseEntity<ExceptionResponse>(
+                new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false)),
+                HttpStatus.NOT_FOUND);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
             HttpHeaders headers, HttpStatus status, WebRequest request) {
