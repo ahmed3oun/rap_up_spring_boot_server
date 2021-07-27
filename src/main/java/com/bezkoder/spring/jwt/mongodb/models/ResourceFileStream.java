@@ -15,7 +15,7 @@ public class ResourceFileStream {
     private String id;
 
     @NotBlank
-    @Size(min = 3)
+    @Size(min = 2)
     private String filename;
 
     private List<String> tags;
@@ -26,9 +26,9 @@ public class ResourceFileStream {
     @NotBlank
     private User author;
 
-    public ResourceFileStream(String id, @NotBlank @Size(min = 3) String filename, List<String> tags,
-            @NotBlank String pathFile, @NotBlank User author) {
-        this.id = id;
+    public ResourceFileStream(@NotBlank @Size(min = 2) String filename, List<String> tags, @NotBlank String pathFile,
+            @NotBlank User author) {
+        // this.id = id;
         this.filename = filename;
         this.tags = tags;
         this.path = pathFile;

@@ -27,6 +27,7 @@ public class CustomExceptionResponseEntity extends ResponseEntityExceptionHandle
     }
 
     @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public final ResponseEntity<ExceptionResponse> handleUserNotFoundException(Exception ex, WebRequest request) {
         return new ResponseEntity<ExceptionResponse>(
                 new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false)),
@@ -34,6 +35,7 @@ public class CustomExceptionResponseEntity extends ResponseEntityExceptionHandle
     }
 
     @ExceptionHandler(RoleNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public final ResponseEntity<ExceptionResponse> handleRoleNotFoundException(Exception ex, WebRequest request) {
         return new ResponseEntity<ExceptionResponse>(
                 new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false)),
@@ -41,6 +43,7 @@ public class CustomExceptionResponseEntity extends ResponseEntityExceptionHandle
     }
 
     @ExceptionHandler(FileStreamNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public final ResponseEntity<ExceptionResponse> handleFileStreamNotFoundException(Exception ex, WebRequest request) {
         return new ResponseEntity<ExceptionResponse>(
                 new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false)),
@@ -58,6 +61,14 @@ public class CustomExceptionResponseEntity extends ResponseEntityExceptionHandle
     @ExceptionHandler(TokenRefreshException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<ExceptionResponse> handleTokenRefreshException(Exception ex, WebRequest request) {
+        return new ResponseEntity<ExceptionResponse>(
+                new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false)),
+                HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(ForbiddenMimeTypeException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<ExceptionResponse> handleForbiddenMimeTypeException(Exception ex, WebRequest request) {
         return new ResponseEntity<ExceptionResponse>(
                 new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false)),
                 HttpStatus.FORBIDDEN);
