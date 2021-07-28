@@ -10,11 +10,13 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface FileStreamRepository extends MongoRepository<ResourceFileStream, String> {
 
-    Optional<ResourceFileStream> findByPath(String path);
+    // Optional<ResourceFileStream> findByPath(String path);
 
     Optional<List<ResourceFileStream>> findByAuthor(User author);
 
     Boolean existsByPath();
+
+    List<ResourceFileStream> findByFilenameContaining(String filename);
 
     Optional<List<ResourceFileStream>> findByFilename(String filename);
 

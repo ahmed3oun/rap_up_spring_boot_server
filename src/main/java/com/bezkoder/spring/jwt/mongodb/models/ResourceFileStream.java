@@ -26,12 +26,12 @@ public class ResourceFileStream {
     @NotBlank
     private User author;
 
-    public ResourceFileStream(@NotBlank @Size(min = 2) String filename, List<String> tags, @NotBlank String pathFile,
+    public ResourceFileStream(@NotBlank @Size(min = 2) String filename, List<String> tags, @NotBlank String path,
             @NotBlank User author) {
         // this.id = id;
         this.filename = filename;
         this.tags = tags;
-        this.path = pathFile;
+        this.path = path;
         this.author = author;
     }
 
