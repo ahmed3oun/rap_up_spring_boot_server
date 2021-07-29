@@ -144,7 +144,7 @@ public class StreamAudioVideoController {
      * return new ResponseEntity<List<ResourceFileStream>>(files, HttpStatus.OK); }
      */
     @GetMapping(value = "/search/all")
-    public ResponseEntity<?> getVideosAudiosByTags(@RequestParam("keyword") final String keyword) {
+    public ResponseEntity<?> getVideosAudiosByFilename(@RequestParam("keyword") final String keyword) {
 
         List<ResourceFileStream> files = new ArrayList<ResourceFileStream>();
 
