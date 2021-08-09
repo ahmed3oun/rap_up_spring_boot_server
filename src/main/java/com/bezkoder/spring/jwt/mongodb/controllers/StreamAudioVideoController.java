@@ -30,6 +30,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -232,5 +233,23 @@ public class StreamAudioVideoController {
         } else {
             throw new RuntimeException("Sorry :: Something gone wrong :: The file doesn't exist or not readable");
         }
+    }
+
+    @DeleteMapping(value = "/{resource_id}")
+    public ResponseEntity<?> deleteResourceById(@PathVariable("id") String resource_id) {
+        ResourceFileStream file = fileStreamRepository.findById(resource_id)
+                .orElseThrow(() -> new FileStreamNotFoundException(
+                        "Sorry :: Something gone wrong :: This Resource file does not exits with ID { " + resource_id
+                                + " }"));
+
+        try {
+            Files.delete(Paths.get(file.getPath()));
+        } catch (IOException e) {
+            throw new FileStreamNotFoundException(
+                    "Sorry :: Something gone wrong :: This Resource file does not exits with ID { " + resource_id
+                            + " }");
+        }
+        fileStreamRepository.deleteById(resource_id);
+        return ResponseEntity.ok(new MessageResponse("Resource file was deleted successfully !"));
     }
 }
