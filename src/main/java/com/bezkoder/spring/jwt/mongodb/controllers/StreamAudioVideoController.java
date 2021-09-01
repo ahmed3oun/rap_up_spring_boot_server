@@ -32,11 +32,6 @@ public class StreamAudioVideoController {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    /*
-     * @Autowired private NonStaticResourceHttpRequestHandler
-     * nonStaticResourceHttpRequestHandler;
-     */
-
     @GetMapping("/{filename}")
     public ResponseEntity<?> getVideosAudiosByName(@PathVariable("filename") String filename) {
 
