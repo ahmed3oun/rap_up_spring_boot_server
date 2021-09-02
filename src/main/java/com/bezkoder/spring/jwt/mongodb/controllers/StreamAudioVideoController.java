@@ -59,7 +59,7 @@ public class StreamAudioVideoController {
     private UserRepository userRepository;
 
     // /api/audiovideo/upload?author_id=...&file=...
-    @PostMapping(value = "/upload", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/upload"/* , consumes = MediaType.APPLICATION_JSON_VALUE */)
     public ResponseEntity<?> uploadResourceFileStream(@RequestParam("author_id") String author_id,
             @RequestParam("file") MultipartFile file) throws IllegalStateException, IOException {
 
@@ -144,6 +144,7 @@ public class StreamAudioVideoController {
      * 
      * return new ResponseEntity<List<ResourceFileStream>>(files, HttpStatus.OK); }
      */
+    // api/audiovideo/search/all?keyword=...
     @GetMapping(value = "/search/all")
     public ResponseEntity<?> getVideosAudiosByFilename(@RequestParam("keyword") final String keyword) {
 

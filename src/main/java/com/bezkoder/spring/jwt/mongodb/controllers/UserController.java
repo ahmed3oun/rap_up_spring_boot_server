@@ -83,7 +83,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("user/{id}")
+    @PutMapping("/user/{id}")
     public ResponseEntity<?> updateUserProfileById(@PathVariable("id") String id,
             @RequestBody UserProfileRequest userProfile) {
         Optional<User> user = userRepository.findById(id);
@@ -114,7 +114,7 @@ public class UserController {
     }
 
     // api/user?user_id=...&role_id=...
-    @PatchMapping("user")
+    @PatchMapping("/user")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> changeUserRole(@RequestParam(required = true, value = "user_id") String user_id,
             @RequestParam(value = "role_id", required = true) String role_id) {
