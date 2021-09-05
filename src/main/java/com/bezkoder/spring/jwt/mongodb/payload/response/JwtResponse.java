@@ -1,5 +1,6 @@
 package com.bezkoder.spring.jwt.mongodb.payload.response;
 
+import java.util.Date;
 import java.util.List;
 
 public class JwtResponse {
@@ -9,16 +10,39 @@ public class JwtResponse {
 	private String id;
 	private String username;
 	private String email;
+
+	private String gender;
+
+	private Date dateOfBirth;
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public Date getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(Date dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+
 	private List<String> roles;
 
-	public JwtResponse(String accessToken, String refreshToken, String id, String username, String email,
-			List<String> roles) {
+	public JwtResponse(String accessToken, String refreshToken, String id, String username, String email, String gender,
+			Date dateOfBirth, List<String> roles) {
 		this.token = accessToken;
 		this.refreshToken = refreshToken;
 		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.roles = roles;
+		this.gender = gender;
+		this.dateOfBirth = dateOfBirth;
 	}
 
 	public String getToken() {

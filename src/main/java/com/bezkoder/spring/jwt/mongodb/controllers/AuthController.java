@@ -64,7 +64,6 @@ public class AuthController {
 
 	@PostMapping(value = "/signin", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody final LoginRequest loginRequest) {
-
 		final Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
@@ -76,8 +75,10 @@ public class AuthController {
 				.collect(Collectors.toList());
 
 		final RefreshToken refreshToken = this.resfreshTokenService.creatRefreshToken(userDetails.getId());
-		return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
-				userDetails.getUsername(), userDetails.getEmail(), roles));
+		return ResponseEntity
+				.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(), userDetails.getUsername(),
+						userDetails.getEmail(), userDetails.getGender(), userDetails.getDateOfBirth(), roles));
+
 	}
 
 	@PostMapping(value = "/signup", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -93,7 +94,7 @@ public class AuthController {
 
 		// Create new user's account
 		final User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
-				encoder.encode(signUpRequest.getPassword()));
+				encoder.encode(signUpRequest.getPassword()), signUpRequest.getGender(), signUpRequest.getDateOfBirth());
 
 		final Set<String> strRoles = signUpRequest.getRoles();
 		final Set<Role> roles = new HashSet<>();

@@ -1,5 +1,7 @@
 package com.bezkoder.spring.jwt.mongodb.models;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -7,8 +9,10 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Document(collection = "users")
 public class User {
@@ -30,13 +34,25 @@ public class User {
 
   private Set<Role> roles = new HashSet<>();
 
+  @NotBlank
+  @Size(max = 20)
+  private String gender;
+
+
+  private Date dateOfBirth;
+
+
+
+
   public User() {
   }
 
-  public User(String username, String email, String password) {
+  public User(String username, String email, String password,String gender,Date dateOfBirth) {
     this.username = username;
     this.email = email;
     this.password = password;
+    this.gender = gender;
+    this.dateOfBirth = dateOfBirth ;
   }
 
   public String getId() {
@@ -78,4 +94,11 @@ public class User {
   public void setRoles(Set<Role> roles) {
     this.roles = roles;
   }
+
+  public String getGender() { return gender; }
+
+  public void setGender(String gender) { this.gender = gender; }
+  public Date getDateOfBirth() { return dateOfBirth; }
+
+  public void setDateOfBirth(Date dateOfBirth) { this.dateOfBirth = dateOfBirth; }
 }
