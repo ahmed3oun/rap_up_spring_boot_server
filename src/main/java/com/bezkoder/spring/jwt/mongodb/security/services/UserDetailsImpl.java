@@ -1,13 +1,11 @@
 package com.bezkoder.spring.jwt.mongodb.security.services;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,17 +31,15 @@ public class UserDetailsImpl implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-	/*public UserDetailsImpl(String id, String username, String email, String password,
-			Collection<? extends GrantedAuthority> authorities) {
-		this.id = id;
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.authorities = authorities;
-	}*/
+    /*
+     * public UserDetailsImpl(String id, String username, String email, String
+     * password, Collection<? extends GrantedAuthority> authorities) { this.id = id;
+     * this.username = username; this.email = email; this.password = password;
+     * this.authorities = authorities; }
+     */
 
     public UserDetailsImpl(String id, String username, String email, String password, String gender, Date dateOfBirth,
-                           Collection<? extends GrantedAuthority> authorities) {
+            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -55,17 +51,10 @@ public class UserDetailsImpl implements UserDetails {
 
     public static UserDetailsImpl build(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-                .collect(Collectors.toList());
+                .map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
 
-        return new UserDetailsImpl(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getPassword(),
-                user.getGender(),
-                user.getDateOfBirth(),
-                authorities);
+        return new UserDetailsImpl(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(),
+                user.getGender(), user.getDateOfBirth(), authorities);
     }
 
     @Override
