@@ -45,8 +45,12 @@ import org.springframework.http.MediaType;
 @RequestMapping("/api/audiovideo")
 public class StreamAudioVideoController {
 
-    public static final String VIDEO_PATH = "C:\\Users\\Ahmed\\Desktop\\ahmed\\SpringProjects\\spring-boot-security-jwt-rapup\\src\\main\\resources\\static\\videos";
-    public static final String AUDIO_PATH = "C:\\Users\\Ahmed\\Desktop\\ahmed\\SpringProjects\\spring-boot-security-jwt-rapup\\src\\main\\resources\\static\\audios";
+    // public static final String VIDEO_PATH =
+    // "C:\\Users\\Ahmed\\Desktop\\ahmed\\SpringProjects\\spring-boot-security-jwt-rapup\\src\\main\\resources\\static\\videos";
+    public static final String VIDEO_PATH = "..\\..\\..\\..\\..\\..\\..\\resources\\static\\videos";
+    // public static final String AUDIO_PATH =
+    // "C:\\Users\\Ahmed\\Desktop\\ahmed\\SpringProjects\\spring-boot-security-jwt-rapup\\src\\main\\resources\\static\\audios";
+    public static final String AUDIO_PATH = "..\\..\\..\\..\\..\\..\\..\\resources\\static\\audios";
     public static final int BYTE_RANGE = 128; // increase the byterange from here
 
     @Autowired
