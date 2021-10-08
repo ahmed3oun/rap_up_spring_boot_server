@@ -241,12 +241,12 @@ public class StreamAudioVideoController {
     }
 
     @DeleteMapping(value = "/{resource_id}")
-    public ResponseEntity<?> deleteResourceById(@PathVariable("id") String resource_id) {
+    public ResponseEntity<?> deleteResourceById(@PathVariable("resource_id") String resource_id) {
         ResourceFileStream file = fileStreamRepository.findById(resource_id)
                 .orElseThrow(() -> new FileStreamNotFoundException(
                         "Sorry :: Something gone wrong :: This Resource file does not exits with ID { " + resource_id
                                 + " }"));
-
+        System.out.println("*********");
         try {
             Files.delete(Paths.get(file.getPath()));
         } catch (IOException e) {

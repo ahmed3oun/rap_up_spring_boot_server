@@ -1,6 +1,5 @@
 package com.bezkoder.spring.jwt.mongodb.payload.request;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -20,7 +19,7 @@ public class SignupRequest {
 
     private String gender;
 
-    private Date dateOfBirth ;
+    private Date dateOfBirth;
 
     public Date getDateOfBirth() {
         return dateOfBirth;
