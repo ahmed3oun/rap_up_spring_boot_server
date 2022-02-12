@@ -17,6 +17,7 @@ import com.bezkoder.spring.jwt.mongodb.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+//import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,8 +46,9 @@ public class UserController {
     @Autowired
     private PasswordEncoder encoder;
 
-    @GetMapping("/users")
-    public ResponseEntity<?> getUsersByUsernameContaining(@RequestParam("subname") String subname) {
+    @GetMapping(value = "/users"/* , consumes = MediaType.APPLICATION_JSON_VALUE */)
+    public ResponseEntity<?> getUsersByUsernameContaining(
+            @RequestParam(value = "subname", required = false) String subname) {
         List<User> users = new ArrayList<User>();
 
         if (subname == null) {
@@ -55,13 +57,14 @@ public class UserController {
             userRepository.findByUsernameContaining(subname).forEach(users::add);
         }
 
-        if (subname.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        if (subname != null) {
+            if (subname.isEmpty())
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<List<User>>(users, HttpStatus.OK);
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping(value = "/user/{id}"/* , consumes = MediaType.APPLICATION_JSON_VALUE */)
     public ResponseEntity<?> getUserById(@PathVariable("id") String id) {
         final User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(
                 "Sorry :: Something gone wrong :: This User with id { " + id + " } does not exist"));
@@ -69,7 +72,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping(value = "/user/{id}"/* , consumes = MediaType.APPLICATION_JSON_VALUE */)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteUserById(@PathVariable("id") String id) {
         userRepository.deleteById(id);
